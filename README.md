@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## 🚀 Tech Stack
 
-## Getting Started
+- **Next.js**: Used for its **server-side rendering (SSR)** capabilities, image optimization, and built-in API routes. It allows for server-side fetch logic without a separate backend.
+- **Fuzzy Search Library**: Handles fuzzy search logic, enabling users to search by **title, co-actors, or genre** with tolerance for typos and approximate matches.
+- **React Player**: Used on the movie player page to **embed video playback with controls**.
+- **Google Colab**: Data was preprocessed using [this Colab notebook](https://colab.research.google.com/drive/10xm_d--qbRYUmkDCMCj_d_6h3RVMBXjL?usp=sharing) to clean and organize movie data.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## ⚙️ Setup Instructions
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Clone the repository:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   ```bash
+   git clone https://github.com/nelsonfai/cageflix
+   cd cageflix
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. Install dependencies:
 
-## Learn More
+   ```bash
+   npm install
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+3. Run the development server:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   npm run dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📊 Data Handling
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Data Source**: Movies data is processed and cleaned using Google Colab. Fields include:
+  - Movie name
+  - Runtime
+  - Release year
+  - Co-stars
+  - Rating
+- **Storage**: Cleaned data is stored in `data.json` and served like a database.
+- **API**: All server-side logic (fetching, filtering, search) is handled in `api/**/route.js` endpoints.
+
+---
+
+## 🔍 Features
+
+- **Home Page**:
+  - Displays movies grouped by categories.
+  - Only categories with **8+ items** are shown.
+  - Implements **infinite scroll**: loads more movies as you scroll.
+  - Option to view **all movies in a category**.
+
+- **Search Page**:
+  - Accepts a search term and queries `api/search`.
+  - Returns **paginated results** using fuzzy search.
+  - Provides **related search terms** for better discovery.
+
+- **Movie Player Page**:
+  - Uses `react-player` to play videos with playback controls.
+
+---
+
+## 🛠 Known Issues / Limitations
+
+- No persistent backend; all logic is handled server-side within the Next.js app.
+- Data is static and does not reflect real-time updates unless manually modified in `data.json`.
+- Search results are based on fuzzy matching, which might occasionally return irrelevant results.
+
+---
+
+## 🌱 Future Enhancements
+
+- Develop a dedicated **backend** for:
+  - More complex filtering
+  - User authentication
+  - Tracking and storing most-searched keywords
+- Add **user preferences** to personalize homepage content (e.g., show genres related to previously watched movies).
+- Optimize performance for large data sets.
+- Integrate an external API (optional) for real-time updates or additional metadata.
+
+---
+
+## 🌐 Live Application
+
+You can view the live version of the application here: [CageFlix - Live](https://cageflix-fai.vercel.app/)
+
+---
+
+## 📊 Data Processing Notebook
+
+The data was preprocessed and cleaned using this [Google Colab notebook](https://colab.research.google.com/drive/10xm_d--qbRYUmkDCMCj_d_6h3RVMBXjL?usp=sharing), where you can review and modify the data structure as needed.
+
+---
+
+## 💻 Repository
+
+You can find the source code for this project on GitHub: [https://github.com/nelsonfai/cageflix](https://github.com/nelsonfai/cageflix)
+
