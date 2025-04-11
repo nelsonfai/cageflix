@@ -1,16 +1,17 @@
-'use client'
-import { useState, useEffect } from 'react';
+'use client';
+
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
 import MovieCard from '@/components/MovieCard';
 import Pagination from '@/components/Pagination';
 import Header from '@/components/Header';
 
-export default function GenrePage() {
+function GenrePageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const genreParam = searchParams.get('genre') || '';
-  
+
   const [searchTerm, setSearchTerm] = useState('');
   const [genreResults, setGenreResults] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -94,16 +95,16 @@ export default function GenrePage() {
       />
 
       <div className="pt-20 pb-16 px-4 md:px-12">
-        <button 
+        <button
           onClick={navigateToHome}
           className="flex items-center text-gray-400 hover:text-white mb-6"
         >
           <ChevronLeft className="h-5 w-5 mr-1" />
           Back to Home
         </button>
-        
+
         <h1 className="text-3xl font-bold mb-8">{formatGenreName(genreParam)}</h1>
-        
+
         {genreResults.length > 0 ? (
           <>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
@@ -114,10 +115,10 @@ export default function GenrePage() {
                 />
               ))}
             </div>
-            
+
             {totalPages > 1 && (
               <div className="mt-12">
-                <Pagination 
+                <Pagination
                   currentPage={currentPage}
                   totalPages={totalPages}
                   onPageChange={(page) => {
@@ -131,7 +132,7 @@ export default function GenrePage() {
         ) : (
           <div className="text-gray-400 mt-8">
             <p>No movies found in this genre.</p>
-            <button 
+            <button
               onClick={navigateToHome}
               className="mt-4 bg-gray-800 px-4 py-2 rounded hover:bg-gray-700"
             >
@@ -141,5 +142,13 @@ export default function GenrePage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function GenrePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <GenrePageContent />
+    </Suspense>
   );
 }

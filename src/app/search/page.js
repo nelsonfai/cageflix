@@ -1,16 +1,16 @@
-'use client'
-import { useState, useEffect } from 'react';
+'use client';
+
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import MovieCard from '@/components/MovieCard';
 import Pagination from '@/components/Pagination';
 import Header from '@/components/Header';
 
-
-export default function SearchPage() {
+function SearchPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryParam = searchParams.get('q') || '';
-  
+
   const [searchTerm, setSearchTerm] = useState(queryParam);
   const [searchResults, setSearchResults] = useState([]);
   const [relatedTitles, setRelatedTitles] = useState([]);
@@ -29,7 +29,7 @@ export default function SearchPage() {
 
   const performSearch = async (query, page = 1) => {
     if (!query.trim()) return;
-    
+
     setIsLoading(true);
     try {
       const response = await fetch(
@@ -39,7 +39,7 @@ export default function SearchPage() {
       setSearchResults(data.results);
       setSearchPage(data.pagination.page);
       setSearchTotalPages(data.pagination.totalPages);
-      setRelatedTitles(data.related)
+      setRelatedTitles(data.related);
     } catch (error) {
       console.error("Search failed:", error);
       setSearchResults([]);
@@ -65,7 +65,6 @@ export default function SearchPage() {
     router.push('/');
   };
 
-
   return (
     <div className="bg-black text-white min-h-screen">
       <Header
@@ -81,8 +80,8 @@ export default function SearchPage() {
             <h2 className="text-lg font-medium mb-4">Explore titles related to: "{searchTerm}" </h2>
             <div className="flex flex-wrap gap-2">
               {relatedTitles.map((title, index) => (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className="bg-gray-800/50 hover:bg-gray-700 px-4 py-2 rounded-full text-sm cursor-pointer"
                   onClick={() => router.push(`/search?q=${title}`)}
                 >
@@ -92,16 +91,16 @@ export default function SearchPage() {
             </div>
           </div>
         )}
-        
+
         <div className="mt-8">
           <h2 className="text-2xl font-medium mb-4">
             {isLoading ? 'Searching...' : (
-              searchResults.length > 0 
-                ? `Results for "${queryParam}"` 
+              searchResults.length > 0
+                ? `Results for "${queryParam}"`
                 : `No results found for "${queryParam}"`
             )}
           </h2>
-          
+
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
             {searchResults.map((movie, index) => (
               <MovieCard
@@ -110,11 +109,11 @@ export default function SearchPage() {
               />
             ))}
           </div>
-          
+
           {searchResults.length === 0 && !isLoading && (
             <div className="text-gray-400 mt-8">
               <p>Try adjusting your search to find what you're looking for.</p>
-              <button 
+              <button
                 onClick={clearSearch}
                 className="mt-4 bg-gray-800 px-4 py-2 rounded hover:bg-gray-700"
               >
@@ -122,9 +121,9 @@ export default function SearchPage() {
               </button>
             </div>
           )}
-          
+
           {searchResults.length > 0 && searchTotalPages > 1 && (
-            <Pagination 
+            <Pagination
               currentPage={searchPage}
               totalPages={searchTotalPages}
               onPageChange={(page) => {
@@ -136,5 +135,13 @@ export default function SearchPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SearchPageContent />
+    </Suspense>
   );
 }
